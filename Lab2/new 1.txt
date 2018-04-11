@@ -1,0 +1,47 @@
+clc
+clear all;
+tic;
+syms x iup ilow N i p M D;
+
+ilow=1;
+iup=100;
+N=1000;
+
+x=[];p1=[];p2=[];xpl=[];
+for i=1:N
+   x(i) = IRNUNI(ilow, iup);
+   p1(i) = vpa(1/iup-ilow);
+   xpl(i) = x(i)/N;
+end
+p2=(x-ilow)/(iup-ilow);
+xpl=sort(xpl);
+
+set(gcf, 'Position', [300, 100, 800, 600])
+
+%Построение графика функции плотности
+subplot(2,1,1);
+histogram(x,'Normalization','probability','NumBins',20);
+%plot(x,p1,'ko');
+grid on;
+xlim([ilow,iup]); ylim([0,1]);
+title('График функции плотности f(x)','fontsize',15);
+xlabel('x'); ylabel('f(x)', 'rotation', 1);
+
+% Построение графика интегральной функции распределения
+subplot(2,1,2);
+plot(xpl,'k-');
+grid on;
+%xlim([0,1]); ylim([0,1]);
+title('График интегральной функции распределения F(x)','fontsize',15);
+xlabel('x'); ylabel('F(x)', 'rotation', 1);
+
+%Вычисление матожидания
+M = sum(x) / N;
+%Вычисление дисперсии
+D = 0;
+for k = 1:N
+    D = D + ((x(k) - M)^2)/N;
+end
+
+t1=toc;
+fprintf('/tВремя выполнеия программы: %f сек',t1);	
